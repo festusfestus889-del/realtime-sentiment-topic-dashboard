@@ -1,0 +1,18 @@
+name: Sentiment Pipeline
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *' # runs every 30 mins = REAL streaming
+jobs:
+  stream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install -r requirements.txt
+      - run: python src/generate_stream_data.py
+      - run: python src/sentiment_model.py
+      - run: python src/topic_modeling.py
+      - run: python src/streaming_processor.py
